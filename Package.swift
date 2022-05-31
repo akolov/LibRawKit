@@ -3,8 +3,6 @@
 
 import PackageDescription
 
-let libVersion = "22:0:0"
-
 let package = Package(
   name: "LibRaw",
   platforms: [.iOS(.v15), .macOS(.v12)],
@@ -23,9 +21,6 @@ let package = Package(
         .headerSearchPath("Sources/LibRaw"),
         .define("LIBRAW_NOTHREADS"),
         .unsafeFlags(["-pthread", "-w"])
-      ],
-      linkerSettings: [
-        .unsafeFlags(["-no-undefined", "-version-info \(libVersion)"])
       ]
     ),
     .target(
