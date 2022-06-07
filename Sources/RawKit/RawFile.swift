@@ -6,6 +6,7 @@
 //
 
 import CLibRaw
+import CoreGraphics
 import Foundation
 
 public class RawFile {
@@ -48,8 +49,32 @@ public class RawFile {
       return nil
     }
 
-    let data = Data(bytes: &processedImage.pointee.data, count: Int(processedImage.pointee.data_size))
-    let image = PlatformImage(data: data)
+    let callback: CGDataProviderReleaseDataCallback = { _, _, _ in
+      // noop
+    }
+
+    guard let provider = CGDataProvider(dataInfo: nil, data: &processedImage.pointee.data, size: Int(processedImage.pointee.data_size), releaseData: callback) else {
+      return nil
+    }
+
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    guard let cgImage = CGImage(
+      width: Int(processedImage.pointee.width),
+      height: Int(processedImage.pointee.height),
+      bitsPerComponent: Int(processedImage.pointee.bits),
+      bitsPerPixel: Int(processedImage.pointee.bits * processedImage.pointee.colors),
+      bytesPerRow: Int(processedImage.pointee.bits * processedImage.pointee.width),
+      space: colorSpace,
+      bitmapInfo: [],
+      provider: provider,
+      decode: nil,
+      shouldInterpolate: true,
+      intent: .defaultIntent
+    ) else {
+      return nil
+    }
+
+    let image = PlatformImage(cgImage: cgImage)
     libraw_dcraw_clear_mem(processedImage)
     return image
   }
