@@ -16,7 +16,7 @@ public class RawFile {
 
   // MARK: Initialization
 
-  init(path: String) throws {
+  public init(path: String) throws {
     self.processor = libraw_init(0)
     try open(path: path)
   }
