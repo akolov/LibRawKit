@@ -5,8 +5,8 @@
 //  Created by Alexander Kolov on 2022-05-31.
 //
 
+import CLibRaw
 import Foundation
-import LibRaw
 
 struct LibRawStatus {
 

@@ -1,0 +1,9 @@
+module CLibRaw [extern_c] {
+  header "libraw/libraw_alloc.h"
+  header "libraw/libraw_const.h"
+  header "libraw/libraw_datastream.h"
+  header "libraw/libraw_types.h"
+  header "libraw/libraw_version.h"
+  header "libraw/libraw.h"
+  export *
+}

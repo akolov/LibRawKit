@@ -4,28 +4,47 @@
 import PackageDescription
 
 let package = Package(
-  name: "LibRaw",
+  name: "RawKit",
   platforms: [.iOS(.v15), .macOS(.v12)],
   products: [
-    .library(name: "LibRaw", targets: ["LibRaw"]),
-    .library(name: "LibRawKit", targets: ["LibRawKit"]),
+    .library(name: "CLibRaw", targets: ["CLibRaw"]),
+    .library(name: "RawKit", targets: ["RawKit"]),
   ],
   targets: [
     .target(
-      name: "LibRaw",
+      name: "CLibRaw",
+      dependencies: [
+        .target(name: "CZLib")
+      ],
       path: ".",
-      sources: ["Sources/LibRaw"],
-      publicHeadersPath: "libraw",
+      sources: ["Sources/CLibRaw"],
+      publicHeadersPath: "Sources/CLibRaw",
       cxxSettings: [
         .headerSearchPath("."),
-        .headerSearchPath("Sources/LibRaw"),
+        .headerSearchPath("Sources/CLibRaw"),
         .define("LIBRAW_NOTHREADS"),
+        .define("NODEPS"),
         .unsafeFlags(["-pthread", "-w"])
+      ],
+      linkerSettings: [
+        .linkedLibrary("c++abi"),
+        .linkedLibrary("z")
       ]
     ),
     .target(
-      name: "LibRawKit",
-      dependencies: [.target(name: "LibRaw")]
+      name: "RawKit",
+      dependencies: [.target(name: "CLibRaw")]
+    ),
+    .testTarget(
+      name: "RawKitTests",
+      dependencies: [.target(name: "RawKit")]
+    ),
+    .systemLibrary(
+      name: "CZLib",
+      pkgConfig: "libz",
+      providers: [
+        .brew(["zlib"])
+      ]
     )
   ]
 )
