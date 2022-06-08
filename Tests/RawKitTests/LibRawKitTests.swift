@@ -7,7 +7,6 @@
 
 import Foundation
 @testable import RawKit
-import CZLib
 
 func test() {
 

@@ -14,7 +14,6 @@ let package = Package(
     .target(
       name: "CLibRaw",
       dependencies: [
-        .target(name: "CZLib")
       ],
       path: ".",
       sources: ["Sources/CLibRaw"],
@@ -27,8 +26,7 @@ let package = Package(
         .unsafeFlags(["-pthread", "-w"])
       ],
       linkerSettings: [
-        .linkedLibrary("c++abi"),
-        .linkedLibrary("z")
+        .linkedLibrary("c++abi")
       ]
     ),
     .target(
@@ -39,12 +37,5 @@ let package = Package(
       name: "RawKitTests",
       dependencies: [.target(name: "RawKit")]
     ),
-    .systemLibrary(
-      name: "CZLib",
-      pkgConfig: "libz",
-      providers: [
-        .brew(["zlib"])
-      ]
-    )
   ]
 )
