@@ -10,19 +10,25 @@ let package = Package(
     .library(name: "CLibRaw", targets: ["CLibRaw"]),
     .library(name: "RawKit", targets: ["RawKit"]),
   ],
+  dependencies: [
+    .package(url: "https://github.com/SusanDoggie/libjpeg.git", from: "1.0.3")
+  ],
   targets: [
     .target(
       name: "CLibRaw",
       dependencies: [
+        .product(name: "libjpeg", package: "libjpeg")
       ],
       path: ".",
       sources: ["Sources/CLibRaw"],
       publicHeadersPath: "Sources/CLibRaw",
       cxxSettings: [
         .headerSearchPath("."),
+        .headerSearchPath("Sources/libjpeg/include"),
         .headerSearchPath("Sources/CLibRaw"),
         .define("LIBRAW_NOTHREADS"),
-        .define("NODEPS"),
+        .define("NO_JASPER"),
+        .define("NO_LCMS"),
         .unsafeFlags(["-pthread", "-w"])
       ],
       linkerSettings: [

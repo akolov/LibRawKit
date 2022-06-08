@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "libjpeg",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SusanDoggie/libjpeg.git",
+      "state" : {
+        "revision" : "26649717b522caf3d0c70ceba28ce31066b79e26",
+        "version" : "1.0.3"
+      }
+    }
+  ],
+  "version" : 2
+}
