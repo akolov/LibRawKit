@@ -49,7 +49,7 @@ public class RawFile {
       return nil
     }
 
-    let image = image(from: &processedImage.pointee)
+    let image = makeImage(from: &processedImage.pointee)
     libraw_dcraw_clear_mem(processedImage)
     return image
   }
@@ -70,7 +70,7 @@ public class RawFile {
       return nil
     }
 
-    let image = image(from: &processedImage.pointee)
+    let image = makeImage(from: &processedImage.pointee)
     libraw_dcraw_clear_mem(processedImage)
     return image
   }
@@ -89,7 +89,20 @@ public class RawFile {
     }
   }
 
-  private func image(from raw: inout libraw_processed_image_t) -> PlatformImage? {
+  private func makeImage(from processedImage: inout libraw_processed_image_t) -> PlatformImage? {
+    let image: PlatformImage?
+    switch processedImage.type {
+    case LibRaw_image_formats(1):
+      image = makeImage(fromJPEG: &processedImage)
+    case LibRaw_image_formats(2):
+      image = makeImage(fromRaw: &processedImage)
+    default:
+      image = nil
+    }
+    return image
+  }
+
+  private func makeImage(fromRaw raw: inout libraw_processed_image_t) -> PlatformImage? {
     let callback: CGDataProviderReleaseDataCallback = { _, _, _ in
       // noop
     }
@@ -116,6 +129,11 @@ public class RawFile {
     }
 
     return PlatformImage(cgImage: cgImage)
+  }
+
+  private func makeImage(fromJPEG jpeg: inout libraw_processed_image_t) -> PlatformImage? {
+    let data = Data(bytes: &jpeg.data, count: Int(jpeg.data_size))
+    return PlatformImage(data: data)
   }
 
 }
